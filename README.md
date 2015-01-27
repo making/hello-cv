@@ -1,3 +1,3 @@
 ``` console
-$ mvn -q compile exec:java -Dexec.mainClass=com.example.App -Dexec.args=hoge.jpg
+$ mvn compile exec:java -Dexec.mainClass=com.example.App -Dexec.args=src/main/resources/lena.png
 ```
