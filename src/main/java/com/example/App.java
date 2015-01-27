@@ -1,15 +1,18 @@
 package com.example;
 
+
 import java.nio.file.Paths;
 
 import static org.bytedeco.javacpp.opencv_core.*;
 import static org.bytedeco.javacpp.opencv_highgui.*;
 import static org.bytedeco.javacpp.opencv_imgproc.*;
+import static org.bytedeco.javacpp.opencv_objdetect.*;
 
 public class App {
     public static void main(String[] args) {
         String filepath = args.length > 0 ? args[0] : App.class.getResource("/lena.png").getFile();
-        resize(filepath);
+        //resize(filepath);
+        faceDetect(filepath);
     }
 
     public static void resize(String filepath) {
@@ -23,5 +26,20 @@ public class App {
             cvReleaseImage(source);
             cvReleaseImage(dest);
         }
+    }
+
+    public static void faceDetect(String filepath) {
+        String classifierName = App.class.getResource("/haarcascade_frontalface_default.xml").getFile();
+        CascadeClassifier faceDetector = new CascadeClassifier(classifierName);
+        Mat source = imread(filepath);
+        Rect faceDetections = new Rect();
+        faceDetector.detectMultiScale(source, faceDetections);
+        for (int i = 0, n = faceDetections.limit(); i < n; i++) {
+            Rect r = faceDetections.position(i);
+            rectangle(source, new Point(r.x(), r.y())
+                    , new Point(r.x() + r.width(), r.y() + r.height()),
+                    new Scalar(0, 0, 255, 0));
+        }
+        imwrite("faces.png", source);
     }
 }
