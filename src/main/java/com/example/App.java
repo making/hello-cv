@@ -45,8 +45,7 @@ public class App {
         }
 
         BufferedImage image = new BufferedImage(source.cols(), source.rows(), source
-                .channels() > 1 ? BufferedImage.TYPE_3BYTE_BGR
-                : BufferedImage.TYPE_BYTE_GRAY);
+                .getBufferedImageType());
         source.copyTo(image);
 
         try (OutputStream out = Files.newOutputStream(Paths
