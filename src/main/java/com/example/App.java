@@ -14,9 +14,10 @@ public class App {
         faceDetect(filepath);
     }
 
-    public static void faceDetect(String filepath) {
-        String classifierName = App.class.getResource(
-                "/haarcascade_frontalface_default.xml").getFile();
+    public static void faceDetect(String filepath) throws URISyntaxException {
+        String classifierName = Paths.get(
+                App.class.getResource("/haarcascade_frontalface_default.xml")
+                        .toURI()).toString();
         CascadeClassifier faceDetector = new CascadeClassifier(classifierName);
         System.out.println("load " + filepath);
         Mat source = imread(filepath);
@@ -26,7 +27,6 @@ public class App {
         System.out.println(numOfFaces + " faces are detected!");
         for (int i = 0; i < numOfFaces; i++) {
             Rect r = faceDetections.position(i);
-            System.out.println(r.width() + " " + r.y());
             rectangle(source, new Point(r.x(), r.y()), new Point(r.x()
                     + r.width(), r.y() + r.height()), new Scalar(0, 0, 255, 0));
         }
