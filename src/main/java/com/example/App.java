@@ -4,8 +4,15 @@ import static org.bytedeco.javacpp.opencv_core.*;
 import static org.bytedeco.javacpp.opencv_highgui.*;
 import static org.bytedeco.javacpp.opencv_objdetect.*;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UncheckedIOException;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.nio.file.Paths;
+
+import javax.imageio.ImageIO;
 
 public class App {
     public static void main(String[] args) throws URISyntaxException {
@@ -36,6 +43,17 @@ public class App {
             circle(source, new Point(x + h / 2, y + h / 2), (w + h) / 12,
                     new Scalar(0, 0, 255, 0), -1, CV_AA, 0);
         }
-        imwrite("faces.png", source);
+
+        BufferedImage image = new BufferedImage(source.cols(), source.rows(), source
+                .channels() > 1 ? BufferedImage.TYPE_3BYTE_BGR
+                : BufferedImage.TYPE_BYTE_GRAY);
+        source.copyTo(image);
+
+        try (OutputStream out = Files.newOutputStream(Paths
+                .get("duked-faces.png"))) {
+            ImageIO.write(image, "png", out);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 }
