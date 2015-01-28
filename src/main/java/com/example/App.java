@@ -27,8 +27,14 @@ public class App {
         System.out.println(numOfFaces + " faces are detected!");
         for (int i = 0; i < numOfFaces; i++) {
             Rect r = faceDetections.position(i);
-            rectangle(source, new Point(r.x(), r.y()), new Point(r.x()
-                    + r.width(), r.y() + r.height()), new Scalar(0, 0, 255, 0));
+            int x = r.x(), y = r.y(), h = r.height(), w = r.width();
+            // make the face Duke
+            rectangle(source, new Point(x, y), new Point(x + w, y + h / 2),
+                    new Scalar(0, 0, 0, 0), -1, CV_AA, 0);
+            rectangle(source, new Point(x, y + h / 2), new Point(x + w, y + h),
+                    new Scalar(255, 255, 255, 0), -1, CV_AA, 0);
+            circle(source, new Point(x + h / 2, y + h / 2), (w + h) / 12,
+                    new Scalar(0, 0, 255, 0), -1, CV_AA, 0);
         }
         imwrite("faces.png", source);
     }
