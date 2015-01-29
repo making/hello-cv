@@ -1,5 +1,6 @@
 package com.example;
 
+import java.net.URISyntaxException;
 import java.nio.file.Paths;
 
 import static org.bytedeco.javacpp.opencv_core.*;
@@ -7,8 +8,9 @@ import static org.bytedeco.javacpp.opencv_highgui.*;
 import static org.bytedeco.javacpp.opencv_imgproc.*;
 
 public class App {
-    public static void main(String[] args) {
-        String filepath = args.length > 0 ? args[0] : App.class.getResource("/lena.png").getFile();
+    public static void main(String[] args) throws URISyntaxException {
+        String filepath = args.length > 0 ? args[0] : Paths.get(
+                App.class.getResource("/lena.png").toURI()).toString();
         resize(filepath);
     }
 
