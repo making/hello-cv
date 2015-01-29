@@ -1,13 +1,12 @@
 package com.example;
 
 import static org.bytedeco.javacpp.opencv_core.*;
-import static org.bytedeco.javacpp.opencv_highgui.*;
 import static org.bytedeco.javacpp.opencv_objdetect.*;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UncheckedIOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -15,19 +14,19 @@ import java.nio.file.Paths;
 import javax.imageio.ImageIO;
 
 public class App {
-    public static void main(String[] args) throws URISyntaxException {
+    public static void main(String[] args) throws URISyntaxException, IOException {
         String filepath = args.length > 0 ? args[0] : Paths.get(
                 App.class.getResource("/lena.png").toURI()).toString();
         faceDetect(filepath);
     }
 
-    public static void faceDetect(String filepath) throws URISyntaxException {
+    public static void faceDetect(String filepath) throws URISyntaxException, IOException {
         String classifierName = Paths.get(
                 App.class.getResource("/haarcascade_frontalface_default.xml")
                         .toURI()).toString();
         CascadeClassifier faceDetector = new CascadeClassifier(classifierName);
         System.out.println("load " + filepath);
-        Mat source = imread(filepath);
+        Mat source = Mat.createFrom(ImageIO.read(new File(filepath)));
         Rect faceDetections = new Rect();
         faceDetector.detectMultiScale(source, faceDetections);
         int numOfFaces = faceDetections.limit();
@@ -51,8 +50,6 @@ public class App {
         try (OutputStream out = Files.newOutputStream(Paths
                 .get("duked-faces.png"))) {
             ImageIO.write(image, "png", out);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         }
     }
 }
