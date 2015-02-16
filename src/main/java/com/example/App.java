@@ -43,10 +43,7 @@ public class App {
                     new Scalar(0, 0, 255, 0), -1, CV_AA, 0);
         }
 
-        BufferedImage image = new BufferedImage(source.cols(), source.rows(), source
-                .getBufferedImageType());
-        source.copyTo(image);
-
+        BufferedImage image = source.getBufferedImage();
         try (OutputStream out = Files.newOutputStream(Paths
                 .get("duked-faces.png"))) {
             ImageIO.write(image, "png", out);
